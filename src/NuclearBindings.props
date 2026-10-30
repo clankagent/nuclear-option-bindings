@@ -1,0 +1,7 @@
+<Project>
+  <!-- For use without NuGet: copy src/ into your repository and import this file from the mod's csproj.
+       The sources compile into the mod; there is no library DLL and no plugin dependency. -->
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)NuclearBindings/*.cs" Link="NuclearBindings/%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

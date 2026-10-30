@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Compiles every source file the way a mod does. Needs your own game files, so CI cannot run it:
+       dotnet build tests/CompileCheck -p:NuclearOptionManagedDir=<game>/NuclearOption_Data/Managed -p:BepInExCoreDir=<game>/BepInEx/core
+       Add -p:Generic=true (with no-incremental) to check the NUCLEAR_BINDINGS_GENERIC build, which does not use Assembly-CSharp. -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- The game's Mirage.dll asks for a newer System.IO.Compression; harmless for a compile check. -->
+    <MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
+    <IsPackable>false</IsPackable>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <NuclearOptionManagedDir Condition="'$(NuclearOptionManagedDir)' == ''">$(NO_MANAGED_DIR)</NuclearOptionManagedDir>
+    <BepInExCoreDir Condition="'$(BepInExCoreDir)' == ''">$(NO_BEPINEX_CORE_DIR)</BepInExCoreDir>
+    <DefineConstants Condition="'$(Generic)' == 'true'">$(DefineConstants);NUCLEAR_BINDINGS_GENERIC</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BepInEx"><HintPath>$(BepInExCoreDir)/BepInEx.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="Assembly-CSharp" Condition="'$(Generic)' != 'true'"><HintPath>$(NuclearOptionManagedDir)/Assembly-CSharp.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="Mirage" Condition="'$(Generic)' != 'true'"><HintPath>$(NuclearOptionManagedDir)/Mirage.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="Assembly-CSharp-firstpass"><HintPath>$(NuclearOptionManagedDir)/Assembly-CSharp-firstpass.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="Rewired_Core"><HintPath>$(NuclearOptionManagedDir)/Rewired_Core.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(NuclearOptionManagedDir)/UnityEngine.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(NuclearOptionManagedDir)/UnityEngine.CoreModule.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>$(NuclearOptionManagedDir)/UnityEngine.InputLegacyModule.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(NuclearOptionManagedDir)/UnityEngine.IMGUIModule.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(NuclearOptionManagedDir)/UnityEngine.UI.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(NuclearOptionManagedDir)/UnityEngine.UIModule.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(NuclearOptionManagedDir)/Unity.TextMeshPro.dll</HintPath><Private>False</Private></Reference>
+  </ItemGroup>
+  <Import Project="../../src/NuclearBindings.props" />
+</Project>

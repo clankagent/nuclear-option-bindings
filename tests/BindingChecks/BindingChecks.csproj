@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Logic checks for the engine-independent sources. They need no game files. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../src/NuclearBindings/BindingRow.cs" Link="Production/BindingRow.cs" />
+    <Compile Include="../../src/NuclearBindings/BindingMigration.cs" Link="Production/BindingMigration.cs" />
+    <PackageReference Include="BepInEx.BaseLib" Version="5.4.21" />
+    <!-- KeyCode only: an enum, so no Unity engine code runs. -->
+    <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" />
+  </ItemGroup>
+</Project>

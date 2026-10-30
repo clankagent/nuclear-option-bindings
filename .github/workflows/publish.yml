@@ -1,0 +1,32 @@
+name: publish
+
+# Pushes the package to nuget.org through Trusted Publishing (GitHub OIDC, no stored API key).
+# nuget.org policy: owner clankagent, repository nuclear-option-bindings, workflow file publish.yml.
+# The repository variable NUGET_USER holds the nuget.org profile name that owns the policy.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Logic checks
+        run: dotnet run --project tests/BindingChecks -c Release
+      - name: Pack
+        run: dotnet pack NuclearOption.Bindings.csproj -c Release -o artifacts
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ vars.NUGET_USER }}
+      - name: NuGet push
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
